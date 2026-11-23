@@ -1,4 +1,4 @@
-name: Luminex build and deploy
+name: Luminex validation and release package
 on:
   push:
     branches: [main]
@@ -10,41 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Package complete website source
-        run: zip -r Luminex-Edge-Logistics-Source.zip . -x '.git/*' 'node_modules/*' '.next/*' '.env' '.env.local'
-      - name: Upload source ZIP
-        uses: actions/upload-artifact@v4
-        with:
-          name: Luminex-Edge-Logistics-Source
-          path: Luminex-Edge-Logistics-Source.zip
-          retention-days: 7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run typecheck
-      - name: Build production site
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: TypeScript validation
+        run: npm run typecheck
+      - name: Production build
         run: npm run build
         env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: AIzaSyBSx8m4V6m_Dkwr_vz1zzlqdrVAlj7hT3M
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ericodial.firebaseapp.com
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ericodial
-          NEXT_PUBLIC_FIREBASE_APP_ID: 1:579759624707:web:78a5bcb491e45a4f9c7436
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
           NEXT_PUBLIC_SUPABASE_URL: https://nsehqfhumeowwzypbozm.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_xH701yoOD8l4H2v4RgfZLA_1uPMtgop
-      - name: Deploy to Netlify
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NEXT_PUBLIC_FIREBASE_API_KEY: AIzaSyBSx8m4V6m_Dkwr_vz1zzlqdrVAlj7hT3M
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ericodial.firebaseapp.com
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ericodial
-          NEXT_PUBLIC_FIREBASE_APP_ID: 1:579759624707:web:78a5bcb491e45a4f9c7436
-          NEXT_PUBLIC_SUPABASE_URL: https://nsehqfhumeowwzypbozm.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_xH701yoOD8l4H2v4RgfZLA_1uPMtgop
-        run: |
-          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
-            echo "Netlify deploy skipped. Add NETLIFY_AUTH_TOKEN as a GitHub Actions repository secret to enable automatic production deployment."
-            exit 0
-          fi
-          npx --yes netlify-cli deploy --build --prod --site 60cf6edc-5cb1-4248-aa81-140e3e2121e6 --auth "$NETLIFY_AUTH_TOKEN"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      - name: Package source release
+        if: ${{ success() }}
+        run: zip -r Luminex-Edge-Logistics-Release.zip . -x '.git/*' 'node_modules/*' '.next/*' '.netlify/*' '.env' '.env.*' '! .env.example'
+      - name: Upload release ZIP
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luminex-Edge-Logistics-Release
+          path: Luminex-Edge-Logistics-Release.zip
+          retention-days: 14
