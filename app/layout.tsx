@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lumedgelogistics.netlify.app"),
+  metadataBase: new URL("https://lumgelogistics.netlify.app"),
   title: "Luminex Edge Logistics | Your Product. Your Budget. Our Responsibility.",
   description: "Product sourcing and dependable logistics across Lagos and Ogun.",
   verification: {
