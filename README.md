@@ -51,6 +51,9 @@ The password is checked server-side only. Do not place it in this repository or 
 - `customer-order-document` — customer-owned order confirmation data.
 - `public-tracking` — delivery lookup using delivery ID and registered phone.
 - `admin-portal` — protected admin operations.
+- `admin-reference-file` — time-limited links to private customer attachments.
+- `admin-product-upload` — protected product image uploads.
+- `admin-product-update` — protected catalogue listing status updates.
 - `paystack-initialize` — server-side Paystack checkout initialization.
 - `paystack-webhook` — signed Paystack webhook verification.
 
