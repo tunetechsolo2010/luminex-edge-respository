@@ -1,4 +1,4 @@
-name: Luminex build check
+name: Luminex build and deploy
 on:
   push:
     branches: [main]
@@ -16,4 +16,28 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm run typecheck
-      - run: npm run build
+      - name: Build production site
+        run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ericodial.firebaseapp.com
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ericodial
+          NEXT_PUBLIC_FIREBASE_APP_ID: 1:579759624707:web:78a5bcb491e45a4f9c7436
+          NEXT_PUBLIC_SUPABASE_URL: https://nsehqfhumeowwzypbozm.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_xH701yoOD8l4H2v4RgfZLA_1uPMtgop
+      - name: Deploy to Netlify
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ericodial.firebaseapp.com
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ericodial
+          NEXT_PUBLIC_FIREBASE_APP_ID: 1:579759624707:web:78a5bcb491e45a4f9c7436
+          NEXT_PUBLIC_SUPABASE_URL: https://nsehqfhumeowwzypbozm.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_xH701yoOD8l4H2v4RgfZLA_1uPMtgop
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+            echo "Netlify deploy skipped. Add NETLIFY_AUTH_TOKEN as a GitHub Actions repository secret to enable automatic production deployment."
+            exit 0
+          fi
+          npx netlify-cli deploy --build --prod --site 77d01349-6f5e-49cc-8bfb-a54607de7e95 --auth "$NETLIFY_AUTH_TOKEN"
