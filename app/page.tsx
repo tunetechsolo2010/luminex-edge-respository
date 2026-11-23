@@ -1,0 +1,30 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from "firebase/auth";
+import { auth, firebaseReady } from "../lib/firebase";
+
+export default function Home() {
+  const [user,setUser]=useState<User|null>(null);
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [mode,setMode]=useState<"login"|"signup">("signup");
+  const [busy,setBusy]=useState(false);
+  const [message,setMessage]=useState("");
+  useEffect(()=>{ if(!auth)return; return onAuthStateChanged(auth,setUser); },[]);
+  async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setMessage("");try{
+    if(!auth)throw new Error("Firebase configuration is not connected yet.");
+    if(mode==="signup")await createUserWithEmailAndPassword(auth,email,password);
+    else await signInWithEmailAndPassword(auth,email,password);
+    setMessage("You're signed in. Your customer account connection is ready for the next setup step.");
+  }catch(err){setMessage(err instanceof Error?err.message:"Unable to continue. Please try again.");}finally{setBusy(false);}}
+  return <main>
+    <header className="shell topbar"><a className="brand" href="#"><span className="mark">L</span><span>LUMINEX EDGE<small>LOGISTICS · A FERGROIND HOLDINGS SUBSIDIARY</small></span></a><nav className="nav"><a href="#services">Services</a><a href="#process">How it works</a><a href="#coverage">Coverage</a><a className="btn dark" href="#account">Get started</a></nav></header>
+    <section className="hero"><div className="shell"><div className="eyebrow">Product sourcing · Logistics · Delivery</div><h1>Your Product.<br/>Your Budget.<br/><span style={{color:"var(--gold)"}}>Our Responsibility.</span></h1><p>Tell us what you need and the budget you have in mind. We’ll check sourcing options, provide a clear quotation, and coordinate delivery with care.</p><div className="hero-actions"><a className="btn" href="#account">Start a request</a><a className="btn outline" href="#process">See how it works</a></div><div className="coverage"><span>Lagos State</span><span>Ogun State</span><span>Local & international sourcing</span></div></div></section>
+    <section className="section shell" id="services"><div className="eyebrow">What we do</div><h2>More than delivery. We help you source.</h2><p className="lead">Whether you know exactly what you want or need help finding the right option, Luminex coordinates the sourcing and delivery journey.</p><div className="grid3"><article className="tile"><div className="num">01</div><h3>Product sourcing</h3><p>Request listed products or tell us what you’re looking for. We check availability with suitable suppliers.</p></article><article className="tile"><div className="num">02</div><h3>Clear quotations</h3><p>We confirm the product cost and delivery fee separately. You review and approve the final quote before paying.</p></article><article className="tile"><div className="num">03</div><h3>Managed delivery</h3><p>Follow your order through sourcing, processing, dispatch and delivery with a unique tracking reference.</p></article></div></section>
+    <section className="section soft" id="process"><div className="shell"><div className="eyebrow">Simple and transparent</div><h2>From request to your doorstep</h2><div className="steps"><div className="step"><b>01 · Tell us what you need</b><p>Choose a catalogue item or submit a custom product request.</p></div><div className="step"><b>02 · Receive your quote</b><p>We check availability and send a quotation with item and delivery costs separated.</p></div><div className="step"><b>03 · Approve and pay</b><p>Accept the quote first, then choose Paystack or eligible pay-on-delivery.</p></div><div className="step"><b>04 · Track delivery</b><p>We source, process and deliver your order across our service area.</p></div></div></div></section>
+    <section className="section shell" id="coverage"><div className="cta"><div><div className="eyebrow">Our initial service area</div><h2>Serving Lagos & Ogun</h2><p>More locations can be introduced as our network grows.</p></div><a className="btn" href="#account">Create an account</a></div></section>
+    <section className="section soft" id="account"><div className="shell"><div className="eyebrow">Customer access</div><h2>{user?"Welcome back":"Create your customer account"}</h2><p className="lead">Use your email to register, sign in and manage your sourcing requests and orders.</p><div className="tile" style={{maxWidth:480,marginTop:24}}>{user?<><p>Signed in as <b>{user.email}</b></p><button className="btn dark" onClick={()=>signOut(auth!)}>Sign out</button></>:<form onSubmit={submit} style={{display:"grid",gap:13}}><div style={{display:"flex",gap:10}}><button type="button" className={"btn "+(mode==="signup"?"":"dark")} onClick={()=>setMode("signup")}>Sign up</button><button type="button" className={"btn "+(mode==="login"?"":"dark")} onClick={()=>setMode("login")}>Log in</button></div><input aria-label="Email" type="email" placeholder="Email address" required value={email} onChange={e=>setEmail(e.target.value)} style={{padding:14,border:"1px solid #dbe2ea",borderRadius:7}}/><input aria-label="Password" type="password" placeholder="Password (at least 6 characters)" minLength={6} required value={password} onChange={e=>setPassword(e.target.value)} style={{padding:14,border:"1px solid #dbe2ea",borderRadius:7}}/><button className="btn" disabled={busy}>{busy?"Please wait…":mode==="signup"?"Create account":"Sign in"}</button>{message&&<p role="status" style={{fontSize:13,color:"#536174",overflowWrap:"anywhere"}}>{message}</p>}</form>}<div className="notice">Account access is being connected to order management. Do not use this form for admin access.</div></div></div></section>
+    <footer className="footer"><div className="shell footerrow"><div>© {new Date().getFullYear()} Luminex Edge Logistics. A subsidiary of Fergroind Holdings.</div><div>Your Product. Your Budget. Our Responsibility.</div></div></footer>
+  </main>;
+}
