@@ -8,3 +8,4 @@
 .reference-file{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0}.reference-file a{font-size:12px;color:#80632f;text-decoration:underline;text-underline-offset:3px}
 .order-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.order-actions .btn{font-size:11px;padding:9px 12px}
 .product-image{width:100%;height:180px;object-fit:cover;display:block;background:#f1f3f5}
+.ad-slot:empty{display:none}.ad-slot{width:100%;display:grid;gap:14px}.ad-slot-item{min-height:0;display:flex;justify-content:center;align-items:center;overflow:hidden}.ad-slot-item:empty{display:none}
