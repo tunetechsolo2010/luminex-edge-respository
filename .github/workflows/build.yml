@@ -47,4 +47,4 @@ jobs:
             echo "Netlify deploy skipped. Add NETLIFY_AUTH_TOKEN as a GitHub Actions repository secret to enable automatic production deployment."
             exit 0
           fi
-          npx --yes netlify-cli deploy --build --prod --site 77d01349-6f5e-49cc-8bfb-a54607de7e95 --auth "$NETLIFY_AUTH_TOKEN"
+          npx --yes netlify-cli deploy --build --prod --site 60cf6edc-5cb1-4248-aa81-140e3e2121e6 --auth "$NETLIFY_AUTH_TOKEN"
