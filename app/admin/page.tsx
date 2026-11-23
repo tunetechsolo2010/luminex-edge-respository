@@ -30,7 +30,7 @@ export default function AdminPage(){
   finally{setBusy(false);}
  }
  useEffect(()=>{if(user)void load();else{setData(null);setNeedSetup(false);}},[user]);
- async function login(e:React.FormEvent){e.preventDefault();if(!auth)return;setBusy(true);setMessage("");try{await signInWithEmailAndPassword(auth,email,password);}catch(e){setMessage(e instanceof Error?e.message:"Sign in failed.");}finally{setBusy(false);}}
+ async function login(e:React.FormEvent){e.preventDefault();if(!auth){setMessage("Firebase is not configured on this website. Please contact Luminex support.");return;}setBusy(true);setMessage("");try{await signInWithEmailAndPassword(auth,email,password);}catch(e){setMessage(e instanceof Error?e.message:"Sign in failed.");}finally{setBusy(false);}}
  async function bootstrap(e:React.FormEvent){e.preventDefault();setBusy(true);try{const r=await call("bootstrap",{password:setupPassword});setMessage(r.message);setNeedSetup(false);await load();}catch(e){setMessage(e instanceof Error?e.message:"Admin setup failed.");}finally{setBusy(false);}}
  async function updateRequestStatus(requestId:string,status:string){setBusy(true);try{await call("update-request",{requestId,status});setMessage("Request status updated.");await load();}catch(e){setMessage(e instanceof Error?e.message:"Could not update request.");}finally{setBusy(false);}}
  async function createQuote(requestId:string){setBusy(true);try{const q=quote[requestId];const r=await call("create-quotation",{requestId,productCost:q?.productCost,deliveryFee:q?.deliveryFee,notes:q?.notes,validDays:3});setMessage("Quotation sent to customer.");await load();}catch(e){setMessage(e instanceof Error?e.message:"Could not send quotation.");}finally{setBusy(false);}}
