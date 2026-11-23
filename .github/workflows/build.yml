@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -31,47 +32,50 @@ jobs:
       - name: TypeScript validation
         run: npm run typecheck
 
-      - name: Production build validation
+      - name: Build static website
         run: npm run build
 
-      - name: Assemble manual-deploy folder
+      - name: Verify required static pages
+        run: |
+          test -f out/index.html
+          test -f out/admin/index.html
+          test -f out/track/index.html
+          test -f out/order/index.html
+          test -f out/404.html
+          echo "Verified homepage, admin, tracking, order document and 404 pages."
+
+      - name: Assemble Netlify drag-and-drop folder
         run: |
           mkdir -p Luminex-Edge-Logistics-Deploy
-          rsync -a \
-            --exclude='.git/' \
-            --exclude='node_modules/' \
-            --exclude='.next/' \
-            --exclude='.netlify/' \
-            --exclude='.env' \
-            --exclude='.env.local' \
-            --exclude='.env.*.local' \
-            --exclude='Luminex-Edge-Logistics-Deploy/' \
-            ./ Luminex-Edge-Logistics-Deploy/
+          cp -a out/. Luminex-Edge-Logistics-Deploy/
 
-      - name: Add manual deployment instructions
+      - name: Add deployment instructions
         run: |
           cat > Luminex-Edge-Logistics-Deploy/DEPLOY-TO-NETLIFY.txt <<'EOF'
-          LUMINEX EDGE LOGISTICS — MANUAL NETLIFY DEPLOY
+          LUMINEX EDGE LOGISTICS — READY-TO-DEPLOY WEBSITE
 
-          This is the source project folder. It has passed the GitHub Actions
-          TypeScript and Next.js production-build checks.
+          This folder contains the BUILT STATIC WEBSITE, not source code.
+          It should contain index.html, admin/, track/, order/, _next/ and assets.
+
+          MANUAL DEPLOY:
+          1. Extract this ZIP on your Android phone.
+          2. Open Netlify in your browser and sign in.
+          3. Open the EXISTING site named lumgelogistics.
+          4. Open Deploys and locate the manual deploy / drag-and-drop area.
+          5. Upload the extracted Luminex-Edge-Logistics-Deploy folder.
+          6. Wait for Netlify to finish publishing, then open:
+             https://lumgelogistics.netlify.app
 
           IMPORTANT:
-          1. Sign in to Netlify in your browser.
-          2. Open the EXISTING project named lumgelogistics.
-          3. Open its Deploys page.
-          4. Use the manual deploy / drag-and-drop area and upload this entire
-             extracted folder (the folder containing package.json and netlify.toml).
-          5. Stay signed in so Netlify can detect Next.js and run the build.
-          6. Wait for the deploy to finish before checking the live site.
-
-          This package does not connect GitHub to Netlify and does not trigger
-          a Netlify deployment by itself. Do not upload only app/, public/, or
-          an individual source file. Upload the complete folder.
-
-          Existing Supabase and Firebase public client configuration is in
-          .env.example. Do not add private service-role keys or Paystack secret
-          keys to this folder or to any NEXT_PUBLIC_ variable.
+          - Upload this folder's contents as a built website. Do not upload the
+            GitHub source repository or the inner source-code ZIP.
+          - This package does not connect GitHub to Netlify and does not deploy
+            automatically.
+          - The order document uses /order/?deliveryId=DELIVERY_ID.
+          - Customer sign-in continues to use Firebase Authentication.
+          - Customer, order, tracking, admin and advertising data continue to
+            use the configured Supabase Edge Functions.
+          - Never add Supabase service-role keys or Paystack secret keys here.
           EOF
 
       - name: Create deployment ZIP
