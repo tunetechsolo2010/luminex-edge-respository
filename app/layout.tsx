@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   verification: {
     google: "h1WRio6yTpoILQ13WdeTRcooQmPCy0dgxU4BOrJwhLs",
   },
+  other: {
+    monetag: "c7287c9a482192a2492b060f4592e57c",
+  },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     shortcut: ["/icon.svg"],
