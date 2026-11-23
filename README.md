@@ -31,7 +31,11 @@ The Netlify site project has been created as `lumgelogistics` (`https://lumgelog
 
 - `NETLIFY_AUTH_TOKEN` — a personal access token generated in Netlify.
 
-The workflow targets the production Netlify site `lumgelogistics` and deploys the Next.js build. Until this secret is added, CI still runs the TypeScript and production build checks but skips deployment.
+The workflow targets the production Netlify site `lumgelogistics` and deploys the Next.js build. Until this secret is added, CI still runs the TypeScript and production build checks but skips deployment. Add it at [GitHub repository Actions secrets](https://github.com/tunetechsolo2010/luminex-edge-respository/settings/secrets/actions). Do not paste the token into source code or chat.
+
+## Firebase production domain
+
+In Firebase Console for project `ericodial`, enable Email/Password under Authentication → Sign-in method and add `lumgelogistics.netlify.app` under Authentication → Settings → Authorized domains. These steps are required for account creation and sign-in on the production domain.
 
 ## Administrator setup
 
