@@ -27,11 +27,11 @@ Firebase is used for customer identity only. Customer and administrator data ope
 
 ## Deploy
 
-The Netlify site project has been created as `lumedgelogistics` (`lumedgelogistics.netlify.app`). The GitHub Actions workflow builds the app on pushes to `main`. To enable automatic production deployment, add a GitHub repository Actions secret:
+The Netlify site project has been created as `lumgelogistics` (`https://lumgelogistics.netlify.app`). The GitHub Actions workflow builds the app on pushes to `main`. To enable automatic production deployment, add a GitHub repository Actions secret:
 
 - `NETLIFY_AUTH_TOKEN` — a personal access token generated in Netlify.
 
-The workflow uses the existing Netlify site ID and deploys the Next.js build. Until this secret is added, CI still runs the TypeScript and production build checks but skips deployment.
+The workflow targets the production Netlify site `lumgelogistics` and deploys the Next.js build. Until this secret is added, CI still runs the TypeScript and production build checks but skips deployment.
 
 ## Administrator setup
 
