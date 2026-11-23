@@ -22,7 +22,7 @@ jobs:
       - name: Production build
         run: npm run build
       - name: Package source release
-        run: zip -r Luminex-Edge-Logistics-Release.zip . -x '.git/*' 'node_modules/*' '.next/*' '.netlify/*' '.env' '.env.local' '.env.production'
+        run: zip -r Luminex-Edge-Logistics-Release.zip . -x '.git/*' 'node_modules/*' '.next/*' '.netlify/*' 'Luminex-Edge-Logistics-Release.zip' '.env' '.env.local' '.env.production'
       - name: Upload release ZIP
         uses: actions/upload-artifact@v4
         with:
