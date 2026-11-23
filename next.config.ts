@@ -1,3 +1,12 @@
 import type { NextConfig } from "next";
-const nextConfig: NextConfig = { images: { remotePatterns: [] } };
+
+const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+    remotePatterns: [],
+  },
+};
+
 export default nextConfig;
