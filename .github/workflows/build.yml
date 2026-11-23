@@ -16,22 +16,15 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm install
+      - name: Load public client configuration
+        run: cp .env.example .env.local
       - name: TypeScript validation
         run: npm run typecheck
       - name: Production build
         run: npm run build
-        env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
-          NEXT_PUBLIC_SUPABASE_URL: https://nsehqfhumeowwzypbozm.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       - name: Package source release
-        if: ${{ success() }}
-        run: zip -r Luminex-Edge-Logistics-Release.zip . -x '.git/*' 'node_modules/*' '.next/*' '.netlify/*' '.env' '.env.*' '! .env.example'
+        run: zip -r Luminex-Edge-Logistics-Release.zip . -x '.git/*' 'node_modules/*' '.next/*' '.netlify/*' '.env' '.env.local' '.env.production'
       - name: Upload release ZIP
-        if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
           name: Luminex-Edge-Logistics-Release
