@@ -21,7 +21,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -38,7 +37,7 @@ jobs:
       - name: Assemble manual-deploy folder
         run: |
           mkdir -p Luminex-Edge-Logistics-Deploy
-          rsync -a ./ Luminex-Edge-Logistics-Deploy/ \
+          rsync -a \
             --exclude='.git/' \
             --exclude='node_modules/' \
             --exclude='.next/' \
@@ -46,7 +45,8 @@ jobs:
             --exclude='.env' \
             --exclude='.env.local' \
             --exclude='.env.*.local' \
-            --exclude='Luminex-Edge-Logistics-Deploy/'
+            --exclude='Luminex-Edge-Logistics-Deploy/' \
+            ./ Luminex-Edge-Logistics-Deploy/
 
       - name: Add manual deployment instructions
         run: |
