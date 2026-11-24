@@ -73,7 +73,8 @@ export default function Home() {
   },[]);
   useEffect(()=>{ if(user) void loadPortal(user); else setData(null); },[user,loadPortal]);
 
-  const filteredPublicProducts=useMemo(()=>publicProducts.filter(p=>(!publicCategory||p.category_id===publicCategory)&&(p.name+" "+(p.brand||"")+" "+(p.description||"")).toLowerCase().includes(publicSearch.toLowerCase())),[publicProducts,publicCategory,publicSearch]);\n  const filteredProducts=useMemo(()=> (data?.products||[]).filter(p=>(!selectedCategory||p.category_id===selectedCategory)&&(p.name+" "+(p.brand||"")+" "+(p.description||"")).toLowerCase().includes(search.toLowerCase())),[data,search,selectedCategory]);
+  const filteredPublicProducts=useMemo(()=>publicProducts.filter(p=>(!publicCategory||p.category_id===publicCategory)&&(p.name+" "+(p.brand||"")+" "+(p.description||"")).toLowerCase().includes(publicSearch.toLowerCase())),[publicProducts,publicCategory,publicSearch]);
+  const filteredProducts=useMemo(()=> (data?.products||[]).filter(p=>(!selectedCategory||p.category_id===selectedCategory)&&(p.name+" "+(p.brand||"")+" "+(p.description||"")).toLowerCase().includes(search.toLowerCase())),[data,search,selectedCategory]);
 
   async function submitAuth(e:React.FormEvent) {
     e.preventDefault(); if(!auth){setMessage("Firebase is not configured on the website yet.");return;}
