@@ -29,7 +29,10 @@ export default function Home() {
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
   const [data,setData]=useState<PortalData|null>(null);
-  const [publicCategories,setPublicCategories]=useState<{id:string;name:string;description?:string}[]>([]);\n  const [publicProducts,setPublicProducts]=useState<Product[]>([]);\n  const [publicSearch,setPublicSearch]=useState("");\n  const [publicCategory,setPublicCategory]=useState("");
+  const [publicCategories,setPublicCategories]=useState<{id:string;name:string;description?:string}[]>([]);
+  const [publicProducts,setPublicProducts]=useState<Product[]>([]);
+  const [publicSearch,setPublicSearch]=useState("");
+  const [publicCategory,setPublicCategory]=useState("");
   const [loadingData,setLoadingData]=useState(false);
   const [tab,setTab]=useState<"catalogue"|"request"|"activity">("catalogue");
   const [search,setSearch]=useState("");
