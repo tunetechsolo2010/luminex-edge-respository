@@ -38,10 +38,13 @@ jobs:
         run: |
           test -f out/index.html
           test -f out/admin/index.html
+          test -f out/account/index.html
+          test -f out/shop/index.html
+          test -f out/product/index.html
           test -f out/track/index.html
           test -f out/order/index.html
           test -f out/404.html
-          echo "Verified homepage, admin, tracking, order document and 404 pages."
+          echo "Verified homepage, account, shop, product, admin, tracking, order document and 404 pages."
 
       - name: Assemble Netlify drag-and-drop folder
         run: |
@@ -54,7 +57,7 @@ jobs:
           LUMINEX EDGE LOGISTICS — READY-TO-DEPLOY WEBSITE
 
           This folder contains the BUILT STATIC WEBSITE, not source code.
-          It should contain index.html, admin/, track/, order/, _next/ and assets.
+          It should contain index.html, account/, shop/, product/, admin/, track/, order/, _next/ and assets.
 
           MANUAL DEPLOY:
           1. Extract this ZIP on your Android phone.
@@ -71,7 +74,11 @@ jobs:
           - This package does not connect GitHub to Netlify and does not deploy
             automatically.
           - The order document uses /order/?deliveryId=DELIVERY_ID.
-          - Customer sign-in continues to use Firebase Authentication.
+          - Customer sign-in uses Firebase Authentication. Enable Google under
+            Firebase Console > Authentication > Sign-in method, and add
+            lumgelogistics.netlify.app under Authorized domains.
+          - Email/password accounts must verify their email before customer APIs
+            permit access. Google sign-in relies on the verified Google identity.
           - Customer, order, tracking, admin and advertising data continue to
             use the configured Supabase Edge Functions.
           - Never add Supabase service-role keys or Paystack secret keys here.
