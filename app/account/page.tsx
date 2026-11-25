@@ -54,14 +54,15 @@ export default function AccountPage(){
   const [geoMessage,setGeoMessage]=useState("");
 
   useEffect(()=>{
-    if(!auth)return;
-    return onAuthStateChanged(auth,async current=>{
+    const firebaseAuth=auth;
+    if(!firebaseAuth)return;
+    return onAuthStateChanged(firebaseAuth,async current=>{
       if(!current){setUser(null);return;}
       try{
         await reload(current);
         if(!current.emailVerified){
           setUser(null);
-          await signOut(auth);
+          await signOut(firebaseAuth);
           setMessage("Please verify your email address before signing in. Check your inbox for the verification link.");
           return;
         }
